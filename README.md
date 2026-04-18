@@ -240,10 +240,10 @@ point it at, so don't point it at stuff you don't trust.
 
 ## Credits
 
-- [`jnitrace`](https://github.com/chame1eon/jnitrace) by chame1eon does all
+- [`jnitrace`](https://github.com/chame1eon/jnitrace) by **chame1eon** does all
   the real work on the tracing side.
 - [`frida`](https://frida.re/) for instrumentation.
-- [`jni_helper`](https://github.com/evilpan/jni_helper) by evilpan inspired
+- [`jni_helper`](https://github.com/evilpan/jni_helper) by **evilpan** inspired
   the static APK analyzer.
 - [`androguard`](https://github.com/androguard/androguard) for DEX parsing.
 
