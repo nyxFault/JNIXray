@@ -1,0 +1,108 @@
+name: Build AppImage
+
+on:
+  # Attach the AppImage to a Release whenever a version tag is pushed.
+  push:
+    tags:
+      - "v*"
+  # Allow manually kicking off a build from the Actions tab (handy for
+  # testing the workflow without cutting a release).
+  workflow_dispatch:
+    inputs:
+      upload_to_release:
+        description: "Upload to an existing release with this tag (leave empty to just produce the artifact)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write   # required to upload assets to releases
+
+concurrency:
+  group: appimage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build x86_64 AppImage
+    # ubuntu-22.04 gives us glibc 2.35 — any desktop Linux released in the last
+    # few years (Debian 12, Ubuntu 22.04+, Fedora 36+, Arch, Kali rolling) will
+    # run the resulting AppImage. Don't bump this casually: a higher glibc
+    # baseline = fewer user machines can run the binary.
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # librsvg2-bin gives us `rsvg-convert`, which build.sh uses to rasterize
+      # the SVG logo into a proper 256x256 PNG icon. Without it the build
+      # falls back to a 1x1 transparent placeholder — ugly on the Release page.
+      - name: Install icon rasterizer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends librsvg2-bin
+
+      # Cache the downloaded tarballs (python-build-standalone, node, appimagetool).
+      # The cache key is pinned to the build script itself, so any change to the
+      # pinned versions invalidates the cache automatically.
+      - name: Cache build downloads
+        uses: actions/cache@v4
+        with:
+          path: packaging/appimage/.cache
+          key: appimage-cache-${{ runner.os }}-${{ hashFiles('packaging/appimage/build.sh') }}
+          restore-keys: |
+            appimage-cache-${{ runner.os }}-
+
+      - name: Build AppImage
+        run: |
+          set -euo pipefail
+          packaging/appimage/build.sh
+          ls -lh dist/
+
+      - name: Quick smoke test (--version)
+        run: |
+          set -euo pipefail
+          chmod +x dist/*.AppImage
+          # FUSE isn't available on GitHub-hosted runners, so use extract-and-run.
+          ./dist/*.AppImage --appimage-extract-and-run --version
+
+      - name: Derive asset name
+        id: meta
+        run: |
+          set -euo pipefail
+          src="$(ls dist/JNIXray-*.AppImage | head -n1)"
+          tag="${GITHUB_REF_NAME:-manual}"
+          # On tag builds, name the asset after the tag so users see it as
+          # JNIXray-v1.2.3-x86_64.AppImage on the Releases page.
+          if [ "${GITHUB_REF_TYPE:-}" = "tag" ]; then
+            dst="dist/JNIXray-${tag}-x86_64.AppImage"
+            mv "$src" "$dst"
+          else
+            dst="$src"
+          fi
+          echo "asset_path=$dst"              >> "$GITHUB_OUTPUT"
+          echo "asset_name=$(basename "$dst")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.asset_name }}
+          path: ${{ steps.meta.outputs.asset_path }}
+          if-no-files-found: error
+          retention-days: 30
+
+      # Attach to the Release only when this run was triggered by a tag push,
+      # OR when a manual dispatch explicitly names an existing release tag.
+      - name: Attach to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/') || inputs.upload_to_release != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || inputs.upload_to_release }}
+          files: ${{ steps.meta.outputs.asset_path }}
+          fail_on_unmatched_files: true
+          # Don't clobber release notes someone already wrote by hand.
+          generate_release_notes: false
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,16 +9,19 @@ export const repoRoot = path.resolve(__dirname, "..", "..", "..");
 export const venvDir = path.join(repoRoot, ".venv");
 export const venvBin = path.join(venvDir, "bin");
 
-function resolveBin(name) {
+function resolveBin(name, envOverride) {
+  if (envOverride && process.env[envOverride]) return process.env[envOverride];
   const local = path.join(venvBin, name);
   if (fs.existsSync(local)) return local;
   return name;
 }
 
-export const jnitraceBin = resolveBin("jnitrace");
-export const fridaPsBin = resolveBin("frida-ps");
-export const fridaBin = resolveBin("frida");
-export const pythonBin = resolveBin("python3");
+// Env overrides let packaged builds (e.g. the AppImage) point at their
+// bundled Python + jnitrace without relying on a repo-local .venv.
+export const jnitraceBin = resolveBin("jnitrace", "JNIXRAY_JNITRACE");
+export const fridaPsBin = resolveBin("frida-ps", "JNIXRAY_FRIDA_PS");
+export const fridaBin = resolveBin("frida", "JNIXRAY_FRIDA");
+export const pythonBin = resolveBin("python3", "JNIXRAY_PYTHON");
 export const adbBin = process.env.ADB_BIN || "adb";
 
 export const backendDir = path.resolve(__dirname, "..");

@@ -128,6 +128,35 @@ npm run build
 # backend is a plain Node ESM app; host it however you like
 ```
 
+## AppImage
+
+Grab the latest `JNIXray-*-x86_64.AppImage` from the
+[Releases page](https://github.com/nyxFault/JNIXray/releases) and run it:
+
+```bash
+chmod +x JNIXray-*-x86_64.AppImage
+./JNIXray-*-x86_64.AppImage
+# UI + API on http://127.0.0.1:4455, browser opens automatically
+```
+
+You still need `adb` on `PATH` and a Frida 16.x `frida-server` running on
+the device — the AppImage doesn't replace those.
+
+### If it complains about FUSE
+
+AppImages use FUSE to mount themselves. Some modern distros (Ubuntu 22.04+,
+Fedora 36+) ship `fuse3` only and the type-2 runtime expects `libfuse.so.2`.
+Two options:
+
+```bash
+# 1. install the fuse2 compat lib
+sudo apt install libfuse2                 # Debian / Ubuntu / Kali
+sudo dnf install fuse-libs                # Fedora / RHEL
+
+# 2. or run the AppImage in "extract and run" mode (no FUSE needed)
+./JNIXray-*-x86_64.AppImage --appimage-extract-and-run
+```
+
 ## Try it with the demo APK
 
 If you don't have a target app handy, there's a tiny sample APK in

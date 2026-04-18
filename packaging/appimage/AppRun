@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# JNIXray AppImage entrypoint.
+#
+# The AppImage squashfs is mounted READ-ONLY at a different /tmp/.mount_XXXXXX
+# path every launch, so nothing here writes into $APPDIR. Shebangs inside the
+# bundled Python are rewritten to `#!/usr/bin/env python3` at *build* time, and
+# we just prepend usr/python/bin + usr/node/bin to PATH so `env` finds them.
+set -euo pipefail
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+export APPDIR="$HERE"
+
+PY_HOME="$APPDIR/usr/python"
+NODE_HOME="$APPDIR/usr/node"
+APP_HOME="$APPDIR/usr/app"
+
+# Prepend bundled interpreters. `env python3` / `env node` -> our copies.
+export PATH="$PY_HOME/bin:$NODE_HOME/bin:${PATH:-/usr/bin:/bin}"
+
+# Do NOT set PYTHONHOME: python-build-standalone already resolves sys.prefix
+# from the executable location, and setting PYTHONHOME here leaks into any
+# subprocess that inherits our env, which can hijack the user's system python
+# if they shell out later. Same reason we leave PYTHONPATH alone.
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONWARNINGS="${PYTHONWARNINGS:-ignore::UserWarning,ignore::DeprecationWarning}"
+
+# Tell the backend exactly which Python + jnitrace to use, bypassing the
+# repo-relative .venv lookup in web/backend/src/config.js.
+export JNIXRAY_PYTHON="$PY_HOME/bin/python3"
+export JNIXRAY_JNITRACE="$PY_HOME/bin/jnitrace"
+export JNIXRAY_FRIDA="$PY_HOME/bin/frida"
+export JNIXRAY_FRIDA_PS="$PY_HOME/bin/frida-ps"
+
+export FRONTEND_DIST="$APP_HOME/frontend-dist"
+export HOST="${HOST:-127.0.0.1}"
+export PORT="${PORT:-4455}"
+
+open_browser() {
+  local url="http://$HOST:$PORT"
+  # Wait for the backend to bind (up to ~6s) before opening the browser.
+  for _ in $(seq 1 20); do
+    if (exec 3<>"/dev/tcp/$HOST/$PORT") 2>/dev/null; then
+      exec 3<&- 2>/dev/null || true
+      break
+    fi
+    sleep 0.3
+  done
+  if   command -v xdg-open >/dev/null 2>&1; then xdg-open "$url" >/dev/null 2>&1 &
+  elif command -v gio      >/dev/null 2>&1; then gio open  "$url" >/dev/null 2>&1 &
+  fi
+}
+
+# --cli just runs the backend without opening a browser (useful for SSH use).
+case "${1:-}" in
+  --cli)       shift; JNIXRAY_NO_BROWSER=1 ;;
+  --no-browser) shift; JNIXRAY_NO_BROWSER=1 ;;
+  --version|-v)
+    "$PY_HOME/bin/python3" -c "import sys; print('python', sys.version.split()[0])"
+    "$NODE_HOME/bin/node" --version | sed 's/^/node /'
+    exit 0
+    ;;
+esac
+
+if [ "${JNIXRAY_NO_BROWSER:-0}" != "1" ]; then
+  open_browser &
+fi
+
+cd "$APP_HOME/backend"
+exec "$NODE_HOME/bin/node" src/index.js "$@"

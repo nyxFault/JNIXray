@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import fs from "node:fs";
 import http from "node:http";
 import { WebSocketServer } from "ws";
 import { URL } from "node:url";
@@ -207,7 +208,22 @@ wss.on("connection", (ws, _req, session) => {
   });
 });
 
+// When FRONTEND_DIST points at a built Vite bundle (see `npm run build`),
+// serve it from the same origin as the API so the whole app works on a
+// single port. This is what the AppImage / standalone packaging uses —
+// in dev you still just run `vite` and proxy /api + /ws from there.
+const frontendDist = process.env.FRONTEND_DIST;
+if (frontendDist && fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist, { index: false, fallthrough: true }));
+  app.get(/^(?!\/(api|ws)\/).*/, (_req, res) => {
+    res.sendFile(path.join(frontendDist, "index.html"));
+  });
+}
+
 server.listen(port, host, () => {
   console.log(`[jnixray] backend listening on http://${host}:${port}`);
   console.log(`[jnixray] jnitrace=${jnitraceBin}`);
+  if (frontendDist && fs.existsSync(frontendDist)) {
+    console.log(`[jnixray] serving ui from ${frontendDist}`);
+  }
 });

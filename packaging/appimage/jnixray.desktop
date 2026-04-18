@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=JNIXray
+GenericName=JNI Tracer
+Comment=Browser UI for jnitrace plus a static JNI helper for Android apps.
+Exec=jnixray
+Icon=jnixray
+Terminal=false
+Categories=Development;Debugger;
+Keywords=android;jni;frida;jnitrace;reverse-engineering;
+StartupNotify=false

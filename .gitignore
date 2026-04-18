@@ -36,6 +36,12 @@ Thumbs.db
 # local runtime state (JNIXray caches APKs + decompiler paths here)
 .jnixray/
 
+# AppImage build artefacts
+packaging/appimage/build/
+packaging/appimage/.cache/
+/dist/
+*.AppImage
+
 # frida server binaries — fetch these yourself, don't commit them
 frida-server/
 frida-server-*
