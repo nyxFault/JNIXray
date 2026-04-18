@@ -31,6 +31,25 @@
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nyxFault/Images/main/JNIXray_01.png" width="900" alt="Live JNI trace"><br>
+  <sub><i>Live trace — color-coded args, thread chips, backtrace, equivalent CLI command preview.</i></sub>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nyxFault/Images/main/JNIXray_02.png" width="900" alt="JNI Helper — native methods"><br>
+  <sub><i>JNI Helper pairs every <code>native</code> Java method with the C symbol that exports it from the .so.</i></sub>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nyxFault/Images/main/JNIXray_03.png" width="900" alt="Pseudo-C from Binary Ninja"><br>
+  <sub><i>One-click pseudo-C from Ghidra / IDA / Binary Ninja, re-typed with JNI signatures from the DEX.</i></sub>
+</p>
+
+---
+
 Pick a device, pick an app, hit *Start trace*. JNI calls stream in live over
 a WebSocket. Every flag `jnitrace` takes on the command line is also exposed
 in the config tab (libraries, method/export include-exclude filters, backtrace
@@ -109,6 +128,23 @@ npm run build
 # backend is a plain Node ESM app; host it however you like
 ```
 
+## Try it with the demo APK
+
+If you don't have a target app handy, there's a tiny sample APK in
+[`examples/HelloJNI/`](examples/HelloJNI/) — a throwaway Android app I built
+specifically to give JNIXray something predictable to trace.
+
+```bash
+adb install examples/HelloJNI/app-debug.apk
+```
+
+Then in the UI: **Device → App** (`com.example.hellojni`) → **Start trace**.
+Tap the buttons in the app and the JNI calls will roll in.
+
+The matching source is at <https://github.com/nyxFault/HelloJNI>, and the
+prebuilt APK lives on its [releases page](https://github.com/nyxFault/HelloJNI/releases/download/v1.0.0/app-debug.apk)
+too if you'd rather grab it from there.
+
 ## Decompilers (optional)
 
 The JNI Helper can shell out to external decompilers. Install whichever you
@@ -136,6 +172,7 @@ None of these are required to use the live tracer.
 │   │   ├── src/              # express + ws server (index.js, tracer.js, ...)
 │   │   └── py/               # python helpers (jni_helper.py, decomp_*.py)
 │   └── frontend/             # vite + react + tailwind
+├── examples/HelloJNI/        # tiny sample APK to play with
 └── docs/assets/              # logos
 ```
 
