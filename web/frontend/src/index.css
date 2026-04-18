@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-size: 17px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+html {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", monospace;
+  font-feature-settings: "calt" 1, "liga" 1, "ss01" 1, "ss02" 1, "zero" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.01em;
+}
+
+body {
+  background:
+    radial-gradient(1200px 800px at 10% -10%, rgba(51, 102, 255, 0.18), transparent 60%),
+    radial-gradient(900px 700px at 100% 0%, rgba(16, 185, 129, 0.12), transparent 60%),
+    linear-gradient(180deg, #05081a 0%, #03040c 100%);
+  height: 100vh;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/*
+ * The UI uses a lot of hard-coded pixel font sizes (text-[10.5px] ... text-[12.5px])
+ * for compact chips, labels, pseudo-C code, backtraces, etc.  Bump them all up a
+ * touch so everything is more readable without having to edit every component.
+ */
+.text-\[10px\]     { font-size: 11.5px !important; }
+.text-\[10\.5px\]  { font-size: 12px   !important; }
+.text-\[11px\]     { font-size: 12.5px !important; }
+.text-\[11\.5px\]  { font-size: 13px   !important; }
+.text-\[12px\]     { font-size: 13.5px !important; }
+.text-\[12\.5px\]  { font-size: 14px   !important; }
+.text-\[13px\]     { font-size: 14.5px !important; }
+
+.ansi-fg-black { color: #4b5563; }
+.ansi-fg-red { color: #f87171; }
+.ansi-fg-green { color: #34d399; }
+.ansi-fg-yellow { color: #facc15; }
+.ansi-fg-blue { color: #60a5fa; }
+.ansi-fg-magenta { color: #e879f9; }
+.ansi-fg-cyan { color: #22d3ee; }
+.ansi-fg-white { color: #f8fafc; }
+.ansi-fg-bright-black { color: #64748b; }
+.ansi-fg-bright-red { color: #fca5a5; }
+.ansi-fg-bright-green { color: #6ee7b7; }
+.ansi-fg-bright-yellow { color: #fde68a; }
+.ansi-fg-bright-blue { color: #93c5fd; }
+.ansi-fg-bright-magenta { color: #f0abfc; }
+.ansi-fg-bright-cyan { color: #67e8f9; }
+.ansi-fg-bright-white { color: #ffffff; }
+.ansi-bold { font-weight: 700; }
+.ansi-dim { opacity: 0.7; }
+.ansi-italic { font-style: italic; }
+.ansi-underline { text-decoration: underline; }
+
+/* Quick bounce for the "copied!" checkmark that replaces the copy button
+   label after the user clips the decompiler output. Kept small so it
+   doesn't distract — just a confirmation it landed on the clipboard. */
+@keyframes copied-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  60%  { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}

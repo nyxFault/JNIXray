@@ -1,0 +1,13 @@
+{
+  "name": "jnixray-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web UI wrapper for jnitrace.",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "node scripts/dev.js",
+    "build": "npm --prefix frontend run build"
+  }
+}

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 88" fill="none" role="img" aria-label="JNIXray  JNI tracer for Android">
+  <title>JNIXray  JNI tracer for Android</title>
+  <defs>
+    <linearGradient id="wm-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0e1430"/>
+      <stop offset="100%" stop-color="#05081a"/>
+    </linearGradient>
+    <linearGradient id="wm-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5c86ff"/>
+      <stop offset="100%" stop-color="#204bdb"/>
+    </linearGradient>
+    <linearGradient id="wm-x1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b5cbff"/>
+      <stop offset="100%" stop-color="#3366ff"/>
+    </linearGradient>
+    <linearGradient id="wm-x2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="wm-text" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#b5cbff"/>
+    </linearGradient>
+    <linearGradient id="wm-xray" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="wm-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.55"/>
+      <stop offset="60%" stop-color="#3366ff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="wm-blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.3"/>
+    </filter>
+  </defs>
+
+  <g transform="translate(12 12)">
+    <rect x="0" y="0" width="64" height="64" rx="14" fill="url(#wm-bg)" stroke="url(#wm-ring)" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="19" fill="url(#wm-glow)"/>
+    <g stroke="#5c86ff" stroke-width="0.6" opacity="0.22">
+      <line x1="32" y1="8"  x2="32" y2="56"/>
+      <line x1="8"  y1="32" x2="56" y2="32"/>
+    </g>
+    <g stroke="#22d3ee" stroke-width="0.55" opacity="0.28" stroke-dasharray="1.8 2.2">
+      <line x1="10" y1="24" x2="54" y2="24"/>
+      <line x1="10" y1="40" x2="54" y2="40"/>
+    </g>
+    <g stroke="url(#wm-ring)" stroke-width="1.9" stroke-linecap="round" fill="none">
+      <path d="M 12 18 L 12 12 L 18 12"/>
+      <path d="M 46 12 L 52 12 L 52 18"/>
+      <path d="M 12 46 L 12 52 L 18 52"/>
+      <path d="M 46 52 L 52 52 L 52 46"/>
+    </g>
+    <g stroke-linecap="round" filter="url(#wm-blur)" opacity="0.7">
+      <line x1="20" y1="20" x2="44" y2="44" stroke="#3366ff" stroke-width="6"/>
+      <line x1="44" y1="20" x2="20" y2="44" stroke="#22d3ee" stroke-width="6"/>
+    </g>
+    <g stroke-linecap="round">
+      <line x1="20" y1="20" x2="44" y2="44" stroke="url(#wm-x1)" stroke-width="4.6"/>
+      <line x1="44" y1="20" x2="20" y2="44" stroke="url(#wm-x2)" stroke-width="4.6"/>
+    </g>
+    <circle cx="32" cy="32" r="3"   fill="#e6f7ff" opacity="0.95"/>
+    <circle cx="32" cy="32" r="1.6" fill="#22d3ee"/>
+  </g>
+
+  <g font-family="'JetBrains Mono', ui-monospace, Menlo, monospace" font-weight="700">
+    <text x="92" y="50" font-size="30" fill="url(#wm-text)" letter-spacing="0.5">JNI</text>
+    <text x="148" y="50" font-size="30" fill="url(#wm-xray)" letter-spacing="0.5">X</text>
+    <text x="170" y="50" font-size="30" fill="url(#wm-text)" letter-spacing="0.5">ray</text>
+    <text x="92" y="70" font-size="11" fill="#7b8cb0" letter-spacing="2.2">JNI  TRACER  //  ANDROID</text>
+  </g>
+</svg>

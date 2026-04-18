@@ -1,0 +1,17 @@
+# jnitrace 3.3.1 is only compatible with Frida 16.x.
+# Frida 17 removed Module.findExportByName(null, ...) / unbundled the Java bridge,
+# which makes jnitrace crash with: TypeError: not a function (engine.js).
+# Keep frida and frida-tools pinned below 17 until we switch forks.
+
+# jnitrace still imports pkg_resources; setuptools 82+ removed it.
+setuptools<82
+
+jnitrace==3.3.1
+frida<17
+frida-tools<14
+
+# JNI Helper — static APK analysis (evilpan/jni_helper style).
+# Parses DEX files to find `native` Java methods and inspects .so symbol tables
+# to pair them with the exported C symbols. See web/backend/py/jni_helper.py.
+androguard>=4.1,<5
+pyelftools>=0.29

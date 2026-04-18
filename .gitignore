@@ -1,0 +1,44 @@
+# python
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# build output
+dist/
+build/
+*.tsbuildinfo
+.vite/
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# local runtime state (JNIXray caches APKs + decompiler paths here)
+.jnixray/
+
+# frida server binaries — fetch these yourself, don't commit them
+frida-server/
+frida-server-*
+
+# thesis / personal notes — not part of the code
+docs/thesis*
